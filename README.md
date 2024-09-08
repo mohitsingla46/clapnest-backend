@@ -18,7 +18,7 @@ Before starting, make sure you have at least these components on your workstatio
 Start by cloning this project on your workstation.
 
 ``` sh
-git clone https://github.com/mohitsingla46/nestjs-clapnest.git
+git clone https://mmohitssingla@bitbucket.org/mmohitssingla/nestjs-clapnest.git
 ```
 
 The next thing will be to install all the dependencies of the project.
