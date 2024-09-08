@@ -5,7 +5,7 @@ import { AuthGuard } from '../guards/auth.guard';
 import { Roles } from "../decorators/roles.decorator";
 import { SignInDto } from "./dto/signin.dto";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
-import { admin, vendor, user } from "../utils/constants";
+import { admin, professional, customer } from "../utils/constants";
 
 @Controller('auth')
 export class AuthController {
@@ -29,7 +29,7 @@ export class AuthController {
     @ApiTags('protected')
     @ApiBearerAuth('access-token')
     @UseGuards(AuthGuard)
-    @Roles(admin, vendor, user)
+    @Roles(admin, professional, customer)
     async getProfile(@Request() req): Promise<any> {
         return this.authService.getProfile(req);
     }
