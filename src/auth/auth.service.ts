@@ -1,51 +1,32 @@
 import { HttpStatus, Injectable, Request, UnauthorizedException } from "@nestjs/common";
-import { User } from "./schemas/users.schema";
 import { JwtService } from '@nestjs/jwt';
 import { AuthDao } from "./auth.dao";
-import { ResponseService } from "../common/services/response.service";
-import { ResponseDto } from "../common/dto/response.dto";
+import { SignUpDto } from "./dto/signup.dto";
+import { SignInDto } from "./dto/signin.dto";
+import { User } from "./entities/users.entity";
 
 @Injectable({})
 export class AuthService {
     constructor(
         private readonly authDao: AuthDao,
-        private jwtService: JwtService,
-        private readonly responseService: ResponseService,
+        private jwtService: JwtService
     ) { }
 
-    async signup(user: User): Promise<ResponseDto<any>> {
-        try {
-            const userCreated = await this.authDao.create(user);
-            return this.responseService.success(userCreated);
-        }
-        catch (error) {
-            return this.responseService.error(error.message, HttpStatus.BAD_REQUEST);
-        }
+    async signup(signUpDto: SignUpDto) {
+        return await this.authDao.create(signUpDto);
     }
 
-    async signin(email: string, password: string): Promise<ResponseDto<any>> {
-        try {
-            const user = await this.authDao.findOne(email, password);
-            if (user) {
-                const payload = { name: user.name, email: user.email };
-                const token = await this.jwtService.signAsync(payload);
-                return this.responseService.success({ token: token });
-            }
+    async signin(signInDto: SignInDto) {
+        const user = await this.authDao.findOne(signInDto);
+        if (user) {
+            const payload = { sub: user.id };
+            return await this.jwtService.signAsync(payload);
+        }
 
-            throw new UnauthorizedException('Invalid credentials');
-        }
-        catch (error) {
-            return this.responseService.error(error.message, HttpStatus.BAD_REQUEST);
-        }
+        throw new UnauthorizedException('Incorrect email or password');
     }
 
-    async getProfile(@Request() req): Promise<ResponseDto<any>> {
-        try {
-            const user = req.user;
-            return this.responseService.success(user);
-        }
-        catch (error) {
-            return this.responseService.error(error.message, HttpStatus.BAD_REQUEST);
-        }
+    async getprofile(id: string): Promise<User> {
+        return await this.authDao.findById(id);
     }
 }

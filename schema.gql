@@ -1,0 +1,38 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type RoleType {
+  id: ID!
+  name: String!
+}
+
+type UserType {
+  id: ID!
+  name: String!
+  email: String!
+  password: String!
+  role: RoleType!
+}
+
+type Query {
+  getprofile: UserType!
+  getRoles: [RoleType!]!
+}
+
+type Mutation {
+  signup(input: SignupInput!): UserType!
+  signin(input: SigninInput!): String!
+}
+
+input SignupInput {
+  name: String!
+  email: String!
+  password: String!
+  role: String!
+}
+
+input SigninInput {
+  email: String!
+  password: String!
+}

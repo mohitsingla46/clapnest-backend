@@ -1,12 +1,12 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { Role } from "../auth/schemas/role.schema";
 import { Model } from "mongoose";
+import { Role } from "./entities/role.entity";
 
 @Injectable({})
 export class RoleDao{
     constructor(
-        @InjectModel(Role.name)
+        @InjectModel("Role")
         private roleModel: Model<Role>
     ) {}
 
