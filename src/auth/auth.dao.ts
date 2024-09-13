@@ -2,9 +2,9 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Model } from "mongoose";
 import { SignUpDto } from "./dto/signup.dto";
-import { User } from "./entities/users.entity";
 import { Role } from "../roles/entities/role.entity";
 import { SignInDto } from "./dto/signin.dto";
+import { User } from "src/users/entities/users.entity";
 
 @Injectable()
 export class AuthDao {
@@ -31,13 +31,5 @@ export class AuthDao {
 
     async findOne(user: SignInDto) {
         return await this.userModel.findOne({ 'email': user.email, 'password': user.password });
-    }
-
-    async findById(id: string) {
-        const user = await this.userModel.findById(id);
-        if (!user) {
-            throw new NotFoundException('User not found');
-        }
-        return user;
     }
 }

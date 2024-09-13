@@ -1,11 +1,10 @@
-import { HttpStatus, Injectable, Request, UnauthorizedException } from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { JwtService } from '@nestjs/jwt';
 import { AuthDao } from "./auth.dao";
 import { SignUpDto } from "./dto/signup.dto";
 import { SignInDto } from "./dto/signin.dto";
-import { User } from "./entities/users.entity";
 
-@Injectable({})
+@Injectable()
 export class AuthService {
     constructor(
         private readonly authDao: AuthDao,
@@ -24,9 +23,5 @@ export class AuthService {
         }
 
         throw new UnauthorizedException('Incorrect email or password');
-    }
-
-    async getprofile(id: string): Promise<User> {
-        return await this.authDao.findById(id);
     }
 }

@@ -4,22 +4,16 @@ import { ChatResolver } from "./chat.resolver";
 import { ChatService } from "./chat.service";
 import { ChatDao } from "./chat.dao";
 import { MongooseModule } from "@nestjs/mongoose";
-import { UserSchema } from "src/auth/entities/users.entity";
-import { AuthDao } from "src/auth/auth.dao";
-import { RoleSchema } from "src/roles/entities/role.entity";
-import { AuthService } from "src/auth/auth.service";
+import { ChatSchema } from "./entities/chat.entity";
 
 @Module({
     imports: [
         MongooseModule.forFeature([
             {
-                name: "User", schema: UserSchema
-            },
-            {
-                name: "Role", schema: RoleSchema
+                name: "Chat", schema: ChatSchema,
             }
         ]),
     ],
-    providers: [ChatGateway, AuthDao, ChatResolver, ChatService, ChatDao, AuthService]
+    providers: [ChatGateway, ChatResolver, ChatService, ChatDao]
 })
 export class ChatModule { }

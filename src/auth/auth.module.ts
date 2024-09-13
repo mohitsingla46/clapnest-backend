@@ -5,8 +5,8 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwt_secret } from '../utils/constants';
 import { AuthDao } from './auth.dao';
 import { AuthResolver } from './auth.resolver';
-import { UserSchema } from './entities/users.entity';
 import { RoleSchema } from 'src/roles/entities/role.entity';
+import { UserSchema } from 'src/users/entities/users.entity';
 
 @Module({
     imports: [

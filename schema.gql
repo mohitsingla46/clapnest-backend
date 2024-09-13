@@ -15,6 +15,13 @@ type UserType {
   role: RoleType!
 }
 
+type ChatType {
+  id: ID!
+  roomId: String!
+  senderId: String!
+  message: String!
+}
+
 type RoomType {
   id: ID!
   userId: String!
@@ -25,13 +32,14 @@ type RoomType {
 type Query {
   getprofile: UserType!
   getUserDetail(id: String!): UserType!
+  getChatUsers: [UserType!]!
   getRoles: [RoleType!]!
-  getUsers: [UserType!]!
 }
 
 type Mutation {
   signup(input: SignupInput!): UserType!
   signin(input: SigninInput!): String!
+  saveMessage(input: CreateChatInput!): ChatType!
   createRoom(input: CreateRoomInput!): RoomType!
 }
 
@@ -45,6 +53,12 @@ input SignupInput {
 input SigninInput {
   email: String!
   password: String!
+}
+
+input CreateChatInput {
+  roomId: String!
+  senderId: String!
+  message: String!
 }
 
 input CreateRoomInput {

@@ -1,15 +1,24 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
+import { Chat } from "./entities/chat.entity";
+import { saveMessageDto } from "./dto/save-message.dto";
 import { Model } from "mongoose";
-import { User } from "src/auth/entities/users.entity";
 
 @Injectable()
 export class ChatDao {
     constructor(
-        @InjectModel('User') private userModel: Model<User>,
+        @InjectModel('Chat') private chatModel: Model<Chat>,
     ) { }
 
-    async find(oppositeRole: string) {
-        return this.userModel.find({ 'role.name': oppositeRole }).exec();
+    async create(newMessage: saveMessageDto) {
+        const chat = new this.chatModel({
+            roomId: newMessage.roomId,
+            senderId: newMessage.senderId,
+            message: newMessage.message
+        });
+
+        return await chat.save();
     }
+
+    
 }

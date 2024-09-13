@@ -15,13 +15,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     @SubscribeMessage('joinRoom')
-    async handleJoinRoom(client: Socket, payload: { userId: string, roomName: string }) {
-        client.join(payload.roomName);
+    async handleJoinRoom(client: Socket, payload: { userId: string, roomId: string }) {
+        client.join(payload.roomId);
     }
 
     @SubscribeMessage('message')
-    handleMessage(client: Socket, payload: { userId: string, roomName: string, message: string }) {
-        this.server.to(payload.roomName).emit('message', payload);
+    handleMessage(client: Socket, payload: { userId: string, roomId: string, message: string }) {
+        this.server.to(payload.roomId).emit('message', payload);
     }
 
     handleDisconnect(client: Socket) {

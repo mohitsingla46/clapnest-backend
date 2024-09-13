@@ -1,9 +1,7 @@
-import { Args, Context, Mutation, Query, Resolver } from "@nestjs/graphql";
+import { Args, Mutation, Resolver } from "@nestjs/graphql";
 import { AuthService } from "./auth.service";
-import { UserType } from "./entities/users.entity";
 import { SigninInput, SignupInput } from "./inputs/user.input";
-import { UseGuards } from "@nestjs/common";
-import { AuthGuard } from "../guards/auth.guard";
+import { UserType } from "src/users/entities/users.entity";
 
 @Resolver()
 export class AuthResolver {
@@ -17,18 +15,5 @@ export class AuthResolver {
     @Mutation(() => String)
     async signin(@Args('input') input: SigninInput) {
         return await this.authService.signin(input);
-    }
-
-    @Query(() => UserType)
-    @UseGuards(AuthGuard)
-    async getprofile(@Context() context) {
-        const userId = context.req.user.sub;
-        return await this.authService.getprofile(userId);
-    }
-
-    @Query(() => UserType)
-    @UseGuards(AuthGuard)
-    async getUserDetail(@Args('id') id: string) {
-        return await this.authService.getprofile(id);
     }
 }

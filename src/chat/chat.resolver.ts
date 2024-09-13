@@ -1,9 +1,7 @@
-import { Args, Context, Query, Resolver } from "@nestjs/graphql";
-import { UserType } from "src/auth/entities/users.entity";
+import { Args, Mutation, Resolver } from "@nestjs/graphql";
 import { ChatService } from "./chat.service";
-import { UseGuards } from "@nestjs/common";
-import { AuthGuard } from "src/guards/auth.guard";
-import { AuthService } from "src/auth/auth.service";
+import { ChatType } from "./entities/chat.entity";
+import { CreateChatInput } from "./inputs/chat.input";
 
 @Resolver()
 export class ChatResolver {
@@ -11,10 +9,9 @@ export class ChatResolver {
         private chatService: ChatService
     ) { }
 
-    @Query(() => [UserType])
-    @UseGuards(AuthGuard)
-    async getUsers(@Context() context) {
-        const userId = context.req.user.sub;
-        return await this.chatService.getUsers(userId);
+    @Mutation(() => ChatType)
+    async saveMessage(@Args('input') input: CreateChatInput) {
+        return await this.chatService.saveMessage(input);
     }
+
 }

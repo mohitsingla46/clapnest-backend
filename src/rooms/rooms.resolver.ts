@@ -2,7 +2,7 @@ import { Args, Mutation, Resolver } from "@nestjs/graphql";
 import { RoomType } from "./entities/rooms.entity";
 import { CreateRoomInput } from "./inputs/room.input";
 import { RoomsService } from "./rooms.service";
-import { AuthGuard } from "src/guards/auth.guard";
+import { AuthGuard } from "src/auth/auth.guard";
 import { UseGuards } from "@nestjs/common";
 
 @Resolver()
