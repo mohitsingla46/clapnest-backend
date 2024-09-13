@@ -15,16 +15,24 @@ type UserType {
   role: RoleType!
 }
 
+type RoomType {
+  id: ID!
+  userId: String!
+  otherUserId: String!
+  roomId: String!
+}
+
 type Query {
   getprofile: UserType!
+  getUserDetail(id: String!): UserType!
   getRoles: [RoleType!]!
   getUsers: [UserType!]!
-  getUserDetail(id: String!): UserType!
 }
 
 type Mutation {
   signup(input: SignupInput!): UserType!
   signin(input: SigninInput!): String!
+  createRoom(input: CreateRoomInput!): RoomType!
 }
 
 input SignupInput {
@@ -37,4 +45,9 @@ input SignupInput {
 input SigninInput {
   email: String!
   password: String!
+}
+
+input CreateRoomInput {
+  userId: String!
+  otherUserId: String!
 }

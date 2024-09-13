@@ -25,4 +25,10 @@ export class AuthResolver {
         const userId = context.req.user.sub;
         return await this.authService.getprofile(userId);
     }
+
+    @Query(() => UserType)
+    @UseGuards(AuthGuard)
+    async getUserDetail(@Args('id') id: string) {
+        return await this.authService.getprofile(id);
+    }
 }

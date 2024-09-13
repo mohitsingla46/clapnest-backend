@@ -6,6 +6,7 @@ import { RolesModule } from './roles/role.module';
 import { ChatModule } from './chat/chat.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { RoomsModule } from './rooms/rooms.module';
 
 @Module({
   imports: [
@@ -21,7 +22,8 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
     AuthModule,
     SeedModule,
     RolesModule,
-    ChatModule
+    ChatModule,
+    RoomsModule
   ],
   controllers: [],
   providers: [],

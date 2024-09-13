@@ -8,8 +8,7 @@ import { AuthService } from "src/auth/auth.service";
 @Resolver()
 export class ChatResolver {
     constructor(
-        private chatService: ChatService,
-        private authService: AuthService
+        private chatService: ChatService
     ) { }
 
     @Query(() => [UserType])
@@ -17,11 +16,5 @@ export class ChatResolver {
     async getUsers(@Context() context) {
         const userId = context.req.user.sub;
         return await this.chatService.getUsers(userId);
-    }
-
-    @Query(() => UserType)
-    @UseGuards(AuthGuard)
-    async getUserDetail(@Args('id') id: string) {
-        return await this.authService.getprofile(id);
     }
 }
