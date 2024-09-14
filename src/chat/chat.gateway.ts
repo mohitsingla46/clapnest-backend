@@ -28,6 +28,11 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         client.emit('roomJoined', { roomId: roomId, message: `Joined room: ${roomId}` });
     }
 
+    @SubscribeMessage('leaveRoom')
+    handleLeaveRoom(client: Socket, payload: { userId: string, roomId: string }) {
+        client.leave(payload.roomId);
+    }
+
     @SubscribeMessage('message')
     async handleMessage(client: Socket, payload: { senderId: string, roomId: string, message: string }) {
         await this.chatService.saveMessage(payload);
