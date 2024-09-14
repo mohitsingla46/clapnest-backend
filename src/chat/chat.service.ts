@@ -1,16 +1,56 @@
 import { Injectable } from "@nestjs/common";
 import { ChatDao } from "./chat.dao";
 import { saveMessageDto } from "./dto/save-message.dto";
+import { RoomsDao } from "src/rooms/rooms.dao";
+import { UsersDao } from "src/users/users.dao";
+import { formatDistanceToNowStrict } from "date-fns";
 
 @Injectable()
 export class ChatService {
     constructor(
-        private readonly chatDao: ChatDao
+        private readonly roomsDao: RoomsDao,
+        private readonly chatDao: ChatDao,
+        private readonly usersDao: UsersDao,
     ) { }
 
-    async saveMessage(newMessage: saveMessageDto) {
-        return await this.chatDao.create(newMessage);
+    async saveMessage(payload: { senderId: string, roomId: string, message: string }) {
+        return await this.chatDao.create(payload);
     }
 
+    async getChats(userId: string) {
+        const rooms = await this.roomsDao.getRoomsByUserId(userId);
 
+        const usersWithLastMessage = [];
+
+        for (const room of rooms) {
+            const lastMessage = await this.chatDao.getLastMessage(room.roomId.toString())
+
+            if (lastMessage) {
+                const otherUserId = room.userId !== userId ? room.userId : room.otherUserId;
+
+                if (otherUserId) {
+                    const user = await this.usersDao.findById(otherUserId.toString());
+                    if (user) {
+
+                        const formattedTime = formatDistanceToNowStrict(new Date(lastMessage.createdAt), { addSuffix: true })
+
+                        usersWithLastMessage.push({
+                            user: {
+                                id: user.id,
+                                name: user.name
+                            },
+                            lastMessage: lastMessage.message,
+                            lastMessageTime: formattedTime
+                        });
+                    }
+                }
+            }
+        }
+
+        return usersWithLastMessage;
+    }
+
+    async getChatHistory(roomId: string) {
+        return await this.chatDao.find(roomId);
+    }
 }

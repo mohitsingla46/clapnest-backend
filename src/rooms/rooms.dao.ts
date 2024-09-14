@@ -23,4 +23,12 @@ export class RoomsDao {
     async findRoomByRoomId(roomId: string) {
         return await this.roomModel.findOne({ roomId: roomId });
     }
+
+    async getRoomsByUserId(userId: string) {
+        return await this.roomModel
+            .find({
+                $or: [{ userId: userId }, { otherUserId: userId }],
+            })
+            .exec();
+    }
 }
