@@ -1,7 +1,7 @@
 import { Args, Context, Query, Resolver } from "@nestjs/graphql";
 import { UserType } from "./entities/users.entity";
 import { UseGuards } from "@nestjs/common";
-import { AuthGuard } from "src/auth/auth.guard";
+import { AuthGuard } from "../auth/auth.guard";
 import { UsersService } from "./users.service";
 
 @Resolver()

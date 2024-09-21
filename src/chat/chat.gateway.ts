@@ -1,7 +1,7 @@
 import { OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway, WebSocketServer } from "@nestjs/websockets";
 import { Server, Socket } from "socket.io";
 import { ChatService } from "./chat.service";
-import { RoomsService } from "src/rooms/rooms.service";
+import { RoomsService } from "../rooms/rooms.service";
 
 @WebSocketGateway({
     cors: {

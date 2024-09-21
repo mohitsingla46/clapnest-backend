@@ -2,7 +2,7 @@ import { Args, Context, Mutation, Query, Resolver } from "@nestjs/graphql";
 import { ChatService } from "./chat.service";
 import { ChatType, UserWithLastMessage } from "./entities/chat.entity";
 import { CreateChatInput } from "./inputs/chat.input";
-import { AuthGuard } from "src/auth/auth.guard";
+import { AuthGuard } from "../auth/auth.guard";
 import { UseGuards } from "@nestjs/common";
 
 @Resolver()

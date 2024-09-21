@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import mongoose from "mongoose";
-import { UserType } from "src/users/entities/users.entity";
+import { UserType } from "../../users/entities/users.entity";
 
 export const ChatSchema = new mongoose.Schema({
     roomId: { type: String, required: true },

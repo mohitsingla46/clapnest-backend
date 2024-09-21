@@ -5,11 +5,11 @@ import { ChatService } from "./chat.service";
 import { ChatDao } from "./chat.dao";
 import { MongooseModule } from "@nestjs/mongoose";
 import { ChatSchema } from "./entities/chat.entity";
-import { RoomSchema } from "src/rooms/entities/rooms.entity";
-import { RoomsDao } from "src/rooms/rooms.dao";
-import { UsersDao } from "src/users/users.dao";
-import { UserSchema } from "src/users/entities/users.entity";
-import { RoomsService } from "src/rooms/rooms.service";
+import { RoomSchema } from "../rooms/entities/rooms.entity";
+import { RoomsDao } from "../rooms/rooms.dao";
+import { UsersDao } from "../users/users.dao";
+import { UserSchema } from "../users/entities/users.entity";
+import { RoomsService } from "../rooms/rooms.service";
 
 @Module({
     imports: [

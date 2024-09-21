@@ -4,7 +4,7 @@ import { Model } from "mongoose";
 import { SignUpDto } from "./dto/signup.dto";
 import { Role } from "../roles/entities/role.entity";
 import { SignInDto } from "./dto/signin.dto";
-import { User } from "src/users/entities/users.entity";
+import { User } from "../users/entities/users.entity";
 
 @Injectable()
 export class AuthDao {

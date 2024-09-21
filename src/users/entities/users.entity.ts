@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import mongoose from "mongoose";
-import { Role, RoleType } from "src/roles/entities/role.entity";
+import { Role, RoleType } from "../../roles/entities/role.entity";
 
 export const UserSchema = new mongoose.Schema({
     name: { type: String, required: true },

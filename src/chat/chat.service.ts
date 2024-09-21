@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { ChatDao } from "./chat.dao";
 import { saveMessageDto } from "./dto/save-message.dto";
-import { RoomsDao } from "src/rooms/rooms.dao";
-import { UsersDao } from "src/users/users.dao";
+import { RoomsDao } from "../rooms/rooms.dao";
+import { UsersDao } from "../users/users.dao";
 import { formatDistanceToNowStrict } from "date-fns";
 
 @Injectable()
