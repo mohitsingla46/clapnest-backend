@@ -18,13 +18,13 @@ Before starting, make sure you have at least these components on your workstatio
 Start by cloning this project on your workstation.
 
 ``` sh
-git clone https://mmohitssingla@bitbucket.org/mmohitssingla/nestjs-clapnest.git
+git clone <repository-url>
 ```
 
 The next thing will be to install all the dependencies of the project.
 
 ```sh
-cd ./nestjs-clapnest
+cd <project-folder-name>
 npm install
 ```
 
@@ -51,7 +51,7 @@ You are now ready to launch the NestJS application using the command below.
 npm run start:dev
 ```
 
-You can now head to `http://localhost:3000/api` and see your API Swagger docs.
+You can now head to `http://localhost:5000/api` and see your API Swagger docs.
 
 ## 2. Project goals
 
