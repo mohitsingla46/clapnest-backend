@@ -15,6 +15,11 @@ type UserType {
   role: RoleType!
 }
 
+type AuthResponse {
+  token: String!
+  user: UserType!
+}
+
 type ChatType {
   id: ID!
   roomId: String!
@@ -39,7 +44,7 @@ type Query {
 
 type Mutation {
   signup(input: SignupInput!): UserType!
-  signin(input: SigninInput!): String!
+  signin(input: SigninInput!): AuthResponse!
   saveMessage(input: CreateChatInput!): ChatType!
 }
 

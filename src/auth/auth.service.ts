@@ -19,7 +19,11 @@ export class AuthService {
         const user = await this.authDao.findOne(signInDto);
         if (user) {
             const payload = { sub: user.id };
-            return await this.jwtService.signAsync(payload);
+            const token = await this.jwtService.signAsync(payload);
+            return {
+                token: token,
+                user: user
+            }
         }
 
         throw new UnauthorizedException('Incorrect email or password');

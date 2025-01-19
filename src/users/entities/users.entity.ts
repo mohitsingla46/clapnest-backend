@@ -37,3 +37,12 @@ export class UserType {
     @Field(() => RoleType)
     readonly role: RoleType;
 }
+
+@ObjectType()
+export class AuthResponse {
+  @Field()
+  token: string;
+
+  @Field(() => UserType)
+  user: UserType;
+}
