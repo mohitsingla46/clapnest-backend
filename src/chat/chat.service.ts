@@ -50,7 +50,29 @@ export class ChatService {
         return usersWithLastMessage;
     }
 
-    async getChatHistory(roomId: string) {
-        return await this.chatDao.find(roomId);
+    async getChatHistory(roomId: string): Promise<any[]> {
+        const chatHistory = await this.chatDao.find(roomId);
+
+        if (!chatHistory || chatHistory.length === 0) {
+            return [];
+        }
+
+        const chatHistoryWithUser = await Promise.all(
+            chatHistory.map(async (chat) => {
+
+                if (!chat.senderId) {
+                    return { ...chat.toObject(), user: null };
+                }
+
+                const user = await this.usersDao.findById(chat.senderId);
+
+                return {
+                    ...chat.toObject(),
+                    user: user || null,
+                };
+            })
+        );
+
+        return chatHistoryWithUser;
     }
 }

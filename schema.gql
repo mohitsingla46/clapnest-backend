@@ -25,6 +25,7 @@ type ChatType {
   roomId: String!
   senderId: String!
   message: String!
+  user: UserType
 }
 
 type UserWithLastMessage {

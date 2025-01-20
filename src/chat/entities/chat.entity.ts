@@ -30,16 +30,19 @@ export class ChatType {
 
     @Field()
     message: String;
+
+    @Field(() => UserType, { nullable: true })
+    user?: UserType;
 }
 
 @ObjectType()
 export class UserWithLastMessage {
     @Field(() => UserType)
     user: UserType;
-  
+
     @Field()
     lastMessage: string;
-  
+
     @Field()
     lastMessageTime: string;
-  }
+}
