@@ -31,6 +31,9 @@ export class ChatType {
     @Field()
     message: String;
 
+    @Field()
+    createdAt: Date;
+
     @Field(() => UserType, { nullable: true })
     user?: UserType;
 }
