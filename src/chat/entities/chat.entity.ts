@@ -44,6 +44,9 @@ export class UserWithLastMessage {
     user: UserType;
 
     @Field()
+    roomId: string;
+
+    @Field()
     lastMessage: string;
 
     @Field()

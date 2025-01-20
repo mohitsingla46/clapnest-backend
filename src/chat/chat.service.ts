@@ -39,6 +39,7 @@ export class ChatService {
                                 id: user.id,
                                 name: user.name
                             },
+                            roomId: lastMessage.roomId,
                             lastMessage: lastMessage.message,
                             lastMessageTime: formattedTime
                         });
