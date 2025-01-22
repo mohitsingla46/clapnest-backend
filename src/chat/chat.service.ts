@@ -65,17 +65,20 @@ export class ChatService {
         const chatHistoryWithUser = await Promise.all(
             chatHistory.map(async (chat) => {
                 if (!chat.senderId) {
-                    return { ...chat.toObject(), user: null };
+                    return { ...chat.toObject(), id: chat._id, user: null };
                 }
 
                 const user = await this.usersDao.findById(chat.senderId);
 
                 return {
                     ...chat.toObject(),
+                    id: chat._id,
                     user: user ? { id: user._id, name: user.name, email: user.email } : null,
                 };
             })
         );
+        console.log(chatHistoryWithUser);
+        
 
         return chatHistoryWithUser;
     }
