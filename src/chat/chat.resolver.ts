@@ -26,8 +26,9 @@ export class ChatResolver {
 
     @Query(() => [ChatType])
     @UseGuards(AuthGuard)
-    async getChatHistory(@Args('roomId') roomId: string) {
-        return await this.chatService.getChatHistory(roomId);
+    async getChatHistory(@Context() context, @Args('otherUserId') otherUserId: string) {
+        const userId = context.req.user.sub;
+        return await this.chatService.getChatHistory(userId, otherUserId);
     }
 
 }

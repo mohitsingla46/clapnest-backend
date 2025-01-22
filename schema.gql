@@ -47,7 +47,7 @@ type Query {
   getChatUsers: [UserType!]!
   getRoles: [RoleType!]!
   getChats: [UserWithLastMessage!]!
-  getChatHistory(roomId: String!): [ChatType!]!
+  getChatHistory(otherUserId: String!): [ChatType!]!
 }
 
 type Mutation {

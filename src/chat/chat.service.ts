@@ -4,6 +4,7 @@ import { saveMessageDto } from "./dto/save-message.dto";
 import { RoomsDao } from "../rooms/rooms.dao";
 import { UsersDao } from "../users/users.dao";
 import { formatDistanceToNowStrict } from "date-fns";
+import { RoomsService } from "../rooms/rooms.service";
 
 @Injectable()
 export class ChatService {
@@ -11,6 +12,7 @@ export class ChatService {
         private readonly roomsDao: RoomsDao,
         private readonly chatDao: ChatDao,
         private readonly usersDao: UsersDao,
+        private readonly roomsService: RoomsService,
     ) { }
 
     async saveMessage(payload: { senderId: string, roomId: string, message: string }) {
@@ -51,7 +53,9 @@ export class ChatService {
         return usersWithLastMessage;
     }
 
-    async getChatHistory(roomId: string): Promise<any[]> {
+    async getChatHistory(userId: string, otherUserId: string): Promise<any> {
+        let roomId = await this.roomsService.createRoom({ userId, otherUserId });
+
         const chatHistory = await this.chatDao.find(roomId);
 
         if (!chatHistory || chatHistory.length === 0) {
@@ -60,7 +64,6 @@ export class ChatService {
 
         const chatHistoryWithUser = await Promise.all(
             chatHistory.map(async (chat) => {
-
                 if (!chat.senderId) {
                     return { ...chat.toObject(), user: null };
                 }
@@ -69,7 +72,7 @@ export class ChatService {
 
                 return {
                     ...chat.toObject(),
-                    user: user || null,
+                    user: user ? { id: user._id, name: user.name, email: user.email } : null,
                 };
             })
         );
