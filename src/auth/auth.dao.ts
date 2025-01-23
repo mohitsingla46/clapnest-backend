@@ -14,7 +14,7 @@ export class AuthDao {
     ) { }
 
     async create(newUser: SignUpDto) {
-        const role = await this.roleModel.findById(newUser.role);
+        const role = await this.roleModel.findById("66dece2d061728512cb50146");
 
         const userToAdd = new this.userModel({
             name: newUser.name,

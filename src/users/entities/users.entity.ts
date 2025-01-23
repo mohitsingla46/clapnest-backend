@@ -33,9 +33,6 @@ export class UserType {
 
     @Field()
     readonly password: string;
-
-    @Field(() => RoleType)
-    readonly role: RoleType;
 }
 
 @ObjectType()

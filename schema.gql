@@ -2,22 +2,21 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type RoleType {
-  id: ID!
-  name: String!
-}
-
 type UserType {
   id: ID!
   name: String!
   email: String!
   password: String!
-  role: RoleType!
 }
 
 type AuthResponse {
   token: String!
   user: UserType!
+}
+
+type RoleType {
+  id: ID!
+  name: String!
 }
 
 type ChatType {
@@ -60,7 +59,6 @@ input SignupInput {
   name: String!
   email: String!
   password: String!
-  role: String!
 }
 
 input SigninInput {
