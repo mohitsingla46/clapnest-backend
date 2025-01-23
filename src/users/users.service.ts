@@ -6,7 +6,7 @@ import { UsersDao } from "./users.dao";
 export class UsersService {
     constructor(
         private readonly usersDao: UsersDao
-    ) {}
+    ) { }
 
     async getprofile(id: string): Promise<User> {
         return await this.usersDao.findById(id);
@@ -19,17 +19,6 @@ export class UsersService {
             throw new Error('User not found or invalid role.');
         }
 
-        const userRole = user.role.name;
-
-        let oppositeRole = '';
-        if (userRole === 'PROFESSIONAL') {
-            oppositeRole = 'CUSTOMER';
-        } else if (userRole === 'CUSTOMER') {
-            oppositeRole = 'PROFESSIONAL';
-        } else {
-            oppositeRole = '';
-        }
-
-        return await this.usersDao.find(oppositeRole);
+        return await this.usersDao.find(user.id);
     }
 }

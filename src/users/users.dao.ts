@@ -7,7 +7,7 @@ import { InjectModel } from "@nestjs/mongoose";
 export class UsersDao {
     constructor(
         @InjectModel('User') private userModel: Model<User>,
-    ) {}
+    ) { }
 
     async findById(id: string) {
         const user = await this.userModel.findById(id);
@@ -17,7 +17,7 @@ export class UsersDao {
         return user;
     }
 
-    async find(oppositeRole: string) {
-        return this.userModel.find({ 'role.name': oppositeRole }).exec();
+    async find(userId: string) {
+        return this.userModel.find({ _id: { $ne: userId } }).exec();
     }
 }
