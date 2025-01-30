@@ -25,6 +25,7 @@ type ChatType {
   senderId: String!
   message: String!
   createdAt: DateTime!
+  formattedCreatedAt: String!
   user: UserType
 }
 

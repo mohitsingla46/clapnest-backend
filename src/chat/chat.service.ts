@@ -1,9 +1,8 @@
 import { Injectable } from "@nestjs/common";
 import { ChatDao } from "./chat.dao";
-import { saveMessageDto } from "./dto/save-message.dto";
 import { RoomsDao } from "../rooms/rooms.dao";
 import { UsersDao } from "../users/users.dao";
-import { formatDistanceToNowStrict } from "date-fns";
+import { formatDistanceToNowStrict, isValid } from "date-fns";
 import { RoomsService } from "../rooms/rooms.service";
 
 @Injectable()
@@ -64,8 +63,22 @@ export class ChatService {
 
         const chatHistoryWithUser = await Promise.all(
             chatHistory.map(async (chat) => {
+                let formattedDate = 'Unknown time';
+
+                if (chat.createdAt) {
+                    const date = new Date(chat.createdAt);
+                    if (isValid(date)) {
+                        formattedDate = formatDistanceToNowStrict(date, { addSuffix: true });
+                    }
+                }
+
                 if (!chat.senderId) {
-                    return { ...chat.toObject(), id: chat._id, user: null };
+                    return {
+                        ...chat.toObject(),
+                        id: chat._id,
+                        user: null,
+                        formattedCreatedAt: formattedDate
+                    };
                 }
 
                 const user = await this.usersDao.findById(chat.senderId);
@@ -74,11 +87,10 @@ export class ChatService {
                     ...chat.toObject(),
                     id: chat._id,
                     user: user ? { id: user._id, name: user.name, email: user.email } : null,
+                    formattedCreatedAt: formattedDate
                 };
             })
         );
-        console.log(chatHistoryWithUser);
-        
 
         return chatHistoryWithUser;
     }
