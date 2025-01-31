@@ -29,7 +29,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     @SubscribeMessage('leaveRoom')
-    handleLeaveRoom(client: Socket, payload: { userId: string, roomId: string }) {
+    handleLeaveRoom(client: Socket, payload: { roomId: string }) {
         client.leave(payload.roomId);
     }
 
