@@ -42,6 +42,8 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @SubscribeMessage('joinRoom')
     async handleJoinRoom(client: Socket, payload: { userId: string, otherUserId: string }) {
         const roomId = await this.roomsService.createRoom(payload);
+        await this.chatService.createOrUpdateUserChatStatus(payload.userId, roomId);
+        await this.chatService.createOrUpdateUserChatStatus(payload.otherUserId, roomId);
         client.join(roomId);
         client.emit('roomJoined', { roomId: roomId, message: `Joined room: ${roomId}` });
     }
@@ -53,8 +55,10 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     @SubscribeMessage('message')
     async handleMessage(client: Socket, payload: { senderId: string, roomId: string, message: string }) {
-        await this.chatService.saveMessage(payload);
-        this.server.to(payload.roomId).emit('message', payload);
+        const savedMessage = await this.chatService.saveMessage(payload);
+        this.server.to(payload.roomId).emit('message', { ...savedMessage, read: false });
+
+        const recipientId = payload.roomId;
     }
 
     async handleDisconnect(client: Socket) {

@@ -5,7 +5,8 @@ import { UserType } from "../../users/entities/users.entity";
 export const ChatSchema = new mongoose.Schema({
     roomId: { type: String, required: true },
     senderId: { type: String, required: true },
-    message: { type: String, required: true }
+    message: { type: String, required: true },
+    read: { type: Boolean, default: false }
 }, { timestamps: true });
 
 export interface Chat extends mongoose.Document {
@@ -13,6 +14,7 @@ export interface Chat extends mongoose.Document {
     roomId: string;
     senderId: string;
     message: string;
+    read: boolean;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -30,6 +32,9 @@ export class ChatType {
 
     @Field()
     message: String;
+
+    @Field()
+    read: boolean;
 
     @Field()
     createdAt: Date;

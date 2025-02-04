@@ -94,4 +94,11 @@ export class ChatService {
 
         return chatHistoryWithUser;
     }
+
+    async createOrUpdateUserChatStatus(userId: string, roomId: string) {
+        const existingStatus = await this.chatDao.findUserChatStatus(userId, roomId);
+        if (!existingStatus) {
+            await this.chatDao.createOrUpdateUserChatStatus({ userId, roomId });
+        }
+    }
 }

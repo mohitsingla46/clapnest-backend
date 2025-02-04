@@ -11,6 +11,8 @@ import { UsersDao } from "../users/users.dao";
 import { UserSchema } from "../users/entities/users.entity";
 import { RoomsService } from "../rooms/rooms.service";
 import { UsersService } from "../users/users.service";
+import { UserChatStatusSchema } from "./entities/user-chat-status.entity";
+import { UserStatusSchema } from "../users/entities/user-status.entity";
 
 @Module({
     imports: [
@@ -23,6 +25,12 @@ import { UsersService } from "../users/users.service";
             },
             {
                 name: "User", schema: UserSchema,
+            },
+            {
+                name: "UserChatStatus", schema: UserChatStatusSchema,
+            },
+            {
+                name: "UserStatus", schema: UserStatusSchema
             }
         ]),
     ],

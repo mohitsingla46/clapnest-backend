@@ -2,11 +2,13 @@ import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { Chat } from "./entities/chat.entity";
 import { Model } from "mongoose";
+import { UserChatStatus } from "./entities/user-chat-status.entity";
 
 @Injectable()
 export class ChatDao {
     constructor(
-        @InjectModel('Chat') private chatModel: Model<Chat>
+        @InjectModel('Chat') private chatModel: Model<Chat>,
+        @InjectModel('UserChatStatus') private userChatStatusModel: Model<UserChatStatus>
     ) { }
 
     async create(newMessage: { senderId: string, roomId: string, message: string }) {
@@ -30,4 +32,23 @@ export class ChatDao {
         return await this.chatModel.find({ roomId: roomId }).exec();
     }
 
+    async findUserChatStatus(userId: string, roomId: string) {
+        return await this.userChatStatusModel.findOne({ userId, roomId }).exec();
+    }
+
+    async createOrUpdateUserChatStatus(data: {
+        userId: string;
+        roomId: string;
+        unreadCount?: number;
+    }) {
+        return await this.userChatStatusModel.findOneAndUpdate(
+            { userId: data.userId, roomId: data.roomId },
+            {
+                $set: {
+                    unreadCount: data.unreadCount ?? 0,
+                },
+            },
+            { upsert: true, new: true }
+        );
+    }
 }

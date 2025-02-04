@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { User, UserType } from "./entities/users.entity";
 import { UsersDao } from "./users.dao";
-import { formatDistanceToNow } from "date-fns";
 
 @Injectable()
 export class UsersService {
@@ -18,15 +17,10 @@ export class UsersService {
         const userObj = user.toObject();
 
         return {
-            id: userObj._id.toString(), // Ensure correct ID format
+            id: userObj._id.toString(),
             name: userObj.name,
             email: userObj.email,
-            password: userObj.password, // Be careful with sensitive data
-            online: userObj.online,
-            lastSeen: userObj.lastSeen,
-            formattedLastSeen: userObj.lastSeen
-                ? formatDistanceToNow(new Date(userObj.lastSeen), { addSuffix: true })
-                : null,
+            password: userObj.password,
         };
     }
 
@@ -41,12 +35,15 @@ export class UsersService {
     }
 
     async updateUserStatus(userId: string, online: boolean, lastSeen: Date | null) {
-        try {
-            const updatedUser = await this.usersDao.updateUserStatus(userId, online, lastSeen);
-            return updatedUser;
-        } catch (error) {
-            console.error(`Error updating user status:`, error);
-            throw new Error(`Unable to update user status for userId: ${userId}`);
+        const existingStatus = await this.usersDao.findUserStatus(userId);
+
+        if (existingStatus) {
+            existingStatus.online = online;
+            existingStatus.lastSeen = lastSeen;
+            existingStatus.lastUpdated = new Date();
+            return await existingStatus.save();
+        } else {
+            return this.usersDao.createUserStatus(userId, online, lastSeen);
         }
     }
 }
