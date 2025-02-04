@@ -2,6 +2,8 @@ import { OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGa
 import { Server, Socket } from "socket.io";
 import { ChatService } from "./chat.service";
 import { RoomsService } from "../rooms/rooms.service";
+import { UsersService } from "../users/users.service";
+import { formatDistanceToNow } from "date-fns";
 
 @WebSocketGateway({
     cors: {
@@ -13,12 +15,28 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     constructor(
         private roomsService: RoomsService,
-        private chatService: ChatService
+        private chatService: ChatService,
+        private userService: UsersService
     ) { }
 
-    handleConnection(client: Socket) {
-        console.log('Client connected:', client.id);
-        client.emit('connected', `You are connected! Your client ID is ${client.id}`);
+    async handleConnection(client: Socket) {
+        const userId = client.handshake.query.userId as string;
+
+        if (!userId) {
+            console.warn(`Client ${client.id} connected without userId.`);
+            client.emit('error', 'userId is required for connection');
+            return;
+        }
+
+        try {
+            await this.userService.updateUserStatus(userId, true, null);
+            client.emit('connected', `You are connected! Your client ID is ${client.id}`);
+            this.server.emit('userStatusUpdate', { userId, online: true, lastSeen: null });
+            client.emit('userStatusUpdate', { userId, online: true, lastSeen: null });
+        } catch (error) {
+            console.error(`Error updating user status for ${userId}:`, error);
+            client.emit('error', 'Unable to update user status');
+        }
     }
 
     @SubscribeMessage('joinRoom')
@@ -40,6 +58,15 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     }
 
     async handleDisconnect(client: Socket) {
-        console.log('Client disconnected:', client.id);
+        const userId = client.handshake.query.userId as string;
+        try {
+            const lastSeen = new Date();
+            const formattedLastSeen = formatDistanceToNow(new Date(lastSeen), { addSuffix: true });
+            await this.userService.updateUserStatus(userId, false, lastSeen);
+            this.server.emit('userStatusUpdate', { userId, online: false, formattedLastSeen });
+            client.emit('userStatusUpdate', { userId, online: false, formattedLastSeen });
+        } catch (error) {
+            console.error(`Error updating user status on disconnect for ${userId}:`, error);
+        }
     }
 }

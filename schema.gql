@@ -7,7 +7,15 @@ type UserType {
   name: String!
   email: String!
   password: String!
+  online: Boolean!
+  lastSeen: DateTime
+  formattedLastSeen: String
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type AuthResponse {
   token: String!
@@ -28,11 +36,6 @@ type ChatType {
   formattedCreatedAt: String!
   user: UserType
 }
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
 
 type UserWithLastMessage {
   user: UserType!

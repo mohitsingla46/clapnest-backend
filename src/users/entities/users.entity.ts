@@ -1,6 +1,6 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
 import mongoose from "mongoose";
-import { Role, RoleType } from "../../roles/entities/role.entity";
+import { Role } from "../../roles/entities/role.entity";
 
 export const UserSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -9,7 +9,9 @@ export const UserSchema = new mongoose.Schema({
     role: {
         id: { type: mongoose.Schema.Types.ObjectId, required: true, ref: 'Role' },
         name: { type: String, required: true }
-    }
+    },
+    online: { type: Boolean, required: true, default: false },
+    lastSeen: { type: Date, default: null },
 }, { timestamps: true });
 
 export interface User extends mongoose.Document {
@@ -18,6 +20,8 @@ export interface User extends mongoose.Document {
     email: string;
     password: string;
     role: Role;
+    online: boolean;
+    lastSeen: Date | null;
 }
 
 @ObjectType()
@@ -33,13 +37,22 @@ export class UserType {
 
     @Field()
     readonly password: string;
+
+    @Field()
+    online: boolean;
+
+    @Field({ nullable: true })
+    lastSeen: Date | null;
+
+    @Field({ nullable: true })
+    formattedLastSeen: string | null;
 }
 
 @ObjectType()
 export class AuthResponse {
-  @Field()
-  token: string;
+    @Field()
+    token: string;
 
-  @Field(() => UserType)
-  user: UserType;
+    @Field(() => UserType)
+    user: UserType;
 }

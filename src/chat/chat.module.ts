@@ -10,6 +10,7 @@ import { RoomsDao } from "../rooms/rooms.dao";
 import { UsersDao } from "../users/users.dao";
 import { UserSchema } from "../users/entities/users.entity";
 import { RoomsService } from "../rooms/rooms.service";
+import { UsersService } from "../users/users.service";
 
 @Module({
     imports: [
@@ -25,6 +26,6 @@ import { RoomsService } from "../rooms/rooms.service";
             }
         ]),
     ],
-    providers: [ChatGateway, ChatResolver, ChatService, ChatDao, RoomsDao, UsersDao, RoomsService]
+    providers: [ChatGateway, ChatResolver, ChatService, ChatDao, RoomsDao, UsersDao, RoomsService, UsersService]
 })
 export class ChatModule { }

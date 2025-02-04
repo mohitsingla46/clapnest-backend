@@ -6,7 +6,7 @@ import { InjectModel } from "@nestjs/mongoose";
 @Injectable()
 export class UsersDao {
     constructor(
-        @InjectModel('User') private userModel: Model<User>,
+        @InjectModel('User') private userModel: Model<User>
     ) { }
 
     async findById(id: string) {
@@ -19,5 +19,13 @@ export class UsersDao {
 
     async find(userId: string) {
         return this.userModel.find({ _id: { $ne: userId } }).exec();
+    }
+
+    async updateUserStatus(userId: string, online: boolean, lastSeen: Date | null) {
+        return await this.userModel.findByIdAndUpdate(
+            userId,
+            { online, lastSeen },
+            { new: true },
+        ).exec();
     }
 }
