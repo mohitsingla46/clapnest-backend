@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { User, UserType } from "./entities/users.entity";
 import { UsersDao } from "./users.dao";
+import { formatDistanceToNow } from "date-fns";
 
 @Injectable()
 export class UsersService {
@@ -14,13 +15,15 @@ export class UsersService {
             throw new NotFoundException('User not found');
         }
 
-        const userObj = user.toObject();
+        const userStatus = await this.usersDao.findUserStatus(id);
 
         return {
-            id: userObj._id.toString(),
-            name: userObj.name,
-            email: userObj.email,
-            password: userObj.password,
+            id: user._id.toString(),
+            name: user.name,
+            email: user.email,
+            online: userStatus?.online || false,
+            lastSeen: userStatus?.lastSeen || null,
+            formattedLastSeen: userStatus?.lastSeen ? formatDistanceToNow(new Date(userStatus.lastSeen), { addSuffix: true }) : null
         };
     }
 

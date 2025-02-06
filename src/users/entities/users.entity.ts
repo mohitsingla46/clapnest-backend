@@ -32,7 +32,13 @@ export class UserType {
     readonly email: string;
 
     @Field()
-    readonly password: string;
+    readonly online: boolean;
+
+    @Field({ nullable: true })
+    lastSeen: Date | null;
+
+    @Field({ nullable: true })
+    formattedLastSeen: string | null;
 }
 
 @ObjectType()

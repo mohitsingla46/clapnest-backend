@@ -95,10 +95,18 @@ export class ChatService {
         return chatHistoryWithUser;
     }
 
-    async createOrUpdateUserChatStatus(userId: string, roomId: string) {
+    async createOrUpdateUserChatStatus(userId: string, roomId: string, isInroom: boolean) {
         const existingStatus = await this.chatDao.findUserChatStatus(userId, roomId);
         if (!existingStatus) {
-            await this.chatDao.createOrUpdateUserChatStatus({ userId, roomId });
+            await this.chatDao.createOrUpdateUserChatStatus({ userId, roomId, isInroom });
         }
+    }
+
+    async updateIsInRoom(userId: string, roomId: string, isInroom: boolean) {
+        return await this.chatDao.updateIsInRoom(userId, roomId, isInroom);
+    }
+
+    async markMessagesAsRead(userId: string, roomId: string) {
+        return await this.chatDao.readChatMessage(userId, roomId);
     }
 }

@@ -42,23 +42,28 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @SubscribeMessage('joinRoom')
     async handleJoinRoom(client: Socket, payload: { userId: string, otherUserId: string }) {
         const roomId = await this.roomsService.createRoom(payload);
-        await this.chatService.createOrUpdateUserChatStatus(payload.userId, roomId);
-        await this.chatService.createOrUpdateUserChatStatus(payload.otherUserId, roomId);
+        await this.chatService.createOrUpdateUserChatStatus(payload.userId, roomId, false);
+        await this.chatService.createOrUpdateUserChatStatus(payload.otherUserId, roomId, false);
+        await this.chatService.updateIsInRoom(payload.userId, roomId, true);
         client.join(roomId);
         client.emit('roomJoined', { roomId: roomId, message: `Joined room: ${roomId}` });
     }
 
     @SubscribeMessage('leaveRoom')
-    handleLeaveRoom(client: Socket, payload: { roomId: string }) {
+    async handleLeaveRoom(client: Socket, payload: { userId: string, roomId: string }) {
+        await this.chatService.updateIsInRoom(payload.userId, payload.roomId, false);
         client.leave(payload.roomId);
     }
 
     @SubscribeMessage('message')
     async handleMessage(client: Socket, payload: { senderId: string, roomId: string, message: string }) {
         const savedMessage = await this.chatService.saveMessage(payload);
-        this.server.to(payload.roomId).emit('message', { ...savedMessage, read: false });
+        this.server.to(payload.roomId).emit('message', savedMessage);
+    }
 
-        const recipientId = payload.roomId;
+    @SubscribeMessage('markAsRead')
+    async handleMarkAsRead(client: Socket, payload: { userId: string, roomId: string }) {
+        await this.chatService.markMessagesAsRead(payload.userId, payload.roomId);
     }
 
     async handleDisconnect(client: Socket) {

@@ -39,6 +39,7 @@ export class ChatDao {
     async createOrUpdateUserChatStatus(data: {
         userId: string;
         roomId: string;
+        isInroom: boolean;
         unreadCount?: number;
     }) {
         return await this.userChatStatusModel.findOneAndUpdate(
@@ -46,9 +47,24 @@ export class ChatDao {
             {
                 $set: {
                     unreadCount: data.unreadCount ?? 0,
+                    isInroom: data.isInroom,
                 },
             },
             { upsert: true, new: true }
+        );
+    }
+
+    async updateIsInRoom(userId: string, roomId: string, isInroom: boolean) {
+        return await this.userChatStatusModel.updateOne(
+            { userId: userId, roomId: roomId },
+            { $set: { isInroom: isInroom } }
+        );
+    }
+
+    async readChatMessage(userId: string, roomId: string) {
+        return await this.chatModel.updateMany(
+            { roomId: roomId, read: false, senderId: { $ne: userId } },
+            { $set: { read: true } }
         );
     }
 }
