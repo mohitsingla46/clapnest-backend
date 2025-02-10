@@ -67,4 +67,22 @@ export class ChatRepository {
             { $set: { read: true } }
         );
     }
+
+    async getUserRoomStatus(userId: string, roomId: string) {
+        return await this.userChatStatusModel.findOne({ userId, roomId }).lean();
+    }
+
+    async incrementUnreadCount(userId: string, roomId: string) {
+        return this.userChatStatusModel.updateOne(
+            { userId, roomId },
+            { $inc: { unreadCount: 1 }, $set: { lastUpdated: new Date() } }
+        );
+    }
+
+    async updateReadCount(userId: string, roomId: string) {
+        return this.userChatStatusModel.updateOne(
+            { userId, roomId },
+            { $set: { unreadCount: 0 } }
+        );
+    }
 }

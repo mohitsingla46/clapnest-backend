@@ -22,4 +22,8 @@ export class RoomsService {
         const sortedUserIds = [userId, otherUserId].sort();
         return `${sortedUserIds[0]}_${sortedUserIds[1]}`;
     }
+
+    async getRoomById(roomId: string) {
+        return await this.roomsRepository.findRoomByRoomId(roomId);
+    }
 }

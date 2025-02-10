@@ -59,4 +59,7 @@ export class UserWithLastMessage {
 
     @Field()
     lastMessageTime: string;
+
+    @Field()
+    unreadCount: number;
 }

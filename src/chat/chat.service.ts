@@ -15,7 +15,11 @@ export class ChatService {
     ) { }
 
     async saveMessage(payload: { senderId: string, roomId: string, message: string }) {
-        return await this.chatRepository.create(payload);
+        const savedMessage = await this.chatRepository.create(payload);
+
+        const formattedCreatedAt = formatDistanceToNowStrict(new Date(savedMessage.createdAt), { addSuffix: true });
+
+        return { ...savedMessage.toObject(), formattedCreatedAt };
     }
 
     async getChats(userId: string) {
@@ -35,6 +39,9 @@ export class ChatService {
 
                         const formattedTime = formatDistanceToNowStrict(new Date(lastMessage.createdAt), { addSuffix: true })
 
+                        const roomStatus = await this.chatRepository.getUserRoomStatus(userId, lastMessage.roomId);
+                        const unreadCount = roomStatus?.unreadCount || 0;
+
                         usersWithLastMessage.push({
                             user: {
                                 id: user.id,
@@ -42,7 +49,8 @@ export class ChatService {
                             },
                             roomId: lastMessage.roomId,
                             lastMessage: lastMessage.message,
-                            lastMessageTime: formattedTime
+                            lastMessageTime: formattedTime,
+                            unreadCount: unreadCount
                         });
                     }
                 }
@@ -107,6 +115,15 @@ export class ChatService {
     }
 
     async markMessagesAsRead(userId: string, roomId: string) {
+        await this.chatRepository.updateReadCount(userId, roomId);
         return await this.chatRepository.readChatMessage(userId, roomId);
+    }
+
+    async getUserRoomStatus(receiverId: string, roomId: string) {
+        return await this.chatRepository.getUserRoomStatus(receiverId, roomId);
+    }
+
+    async incrementUnreadCount(userId: string, roomId: string) {
+        return this.chatRepository.incrementUnreadCount(userId, roomId);
     }
 }

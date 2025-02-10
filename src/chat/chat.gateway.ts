@@ -49,16 +49,40 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
         client.emit('roomJoined', { roomId: roomId, message: `Joined room: ${roomId}` });
     }
 
+    @SubscribeMessage('join_user')
+    handleJoinUser(client: Socket, payload: { userId: string }) {
+        client.join(payload.userId);
+    }
+
     @SubscribeMessage('leaveRoom')
     async handleLeaveRoom(client: Socket, payload: { userId: string, roomId: string }) {
         await this.chatService.updateIsInRoom(payload.userId, payload.roomId, false);
         client.leave(payload.roomId);
     }
 
+    @SubscribeMessage('leave_user')
+    handleLeaveUser(client: Socket, payload: { userId: string }) {
+        client.leave(payload.userId);
+    }
+
     @SubscribeMessage('message')
     async handleMessage(client: Socket, payload: { senderId: string, roomId: string, message: string }) {
+
         const savedMessage = await this.chatService.saveMessage(payload);
         this.server.to(payload.roomId).emit('message', savedMessage);
+
+        const room = await this.roomsService.getRoomById(payload.roomId);
+        if (!room) return;
+
+        const receiverId = room.userId === payload.senderId ? room.otherUserId.toString() : room.userId.toString();
+
+        const roomStatus = await this.chatService.getUserRoomStatus(receiverId, payload.roomId);
+        const isReceiverInRoom = roomStatus?.isInroom || false;
+
+        if (!isReceiverInRoom) {
+            this.server.to(receiverId).emit('new_message', savedMessage);
+            await this.chatService.incrementUnreadCount(receiverId, payload.roomId);
+        }
     }
 
     @SubscribeMessage('markAsRead')
