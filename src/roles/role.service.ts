@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
-import { RoleDao } from "./role.dao";
+import { RoleRepository } from "./role.repository";
 import { Role } from "./entities/role.entity";
 
 @Injectable({})
 export class RoleService {
     constructor(
-        private readonly roleDao: RoleDao
+        private readonly roleRepository: RoleRepository
     ) { }
 
     async getRoles(): Promise<Role[]> {
-        return await this.roleDao.getRoles();
+        return await this.roleRepository.getRoles();
     }
 }

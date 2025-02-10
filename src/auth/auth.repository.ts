@@ -7,7 +7,7 @@ import { SignInDto } from "./dto/signin.dto";
 import { User } from "../users/entities/users.entity";
 
 @Injectable()
-export class AuthDao {
+export class AuthRepository {
     constructor(
         @InjectModel('User') private userModel: Model<User>,
         @InjectModel('Role') private roleModel: Model<Role>

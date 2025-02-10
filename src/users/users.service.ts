@@ -1,21 +1,21 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
 import { User, UserType } from "./entities/users.entity";
-import { UsersDao } from "./users.dao";
+import { UsersRepository } from "./users.repository";
 import { formatDistanceToNow } from "date-fns";
 
 @Injectable()
 export class UsersService {
     constructor(
-        private readonly usersDao: UsersDao
+        private readonly usersRepository: UsersRepository
     ) { }
 
     async getprofile(id: string): Promise<UserType> {
-        const user = await this.usersDao.findById(id);
+        const user = await this.usersRepository.findById(id);
         if (!user) {
             throw new NotFoundException('User not found');
         }
 
-        const userStatus = await this.usersDao.findUserStatus(id);
+        const userStatus = await this.usersRepository.findUserStatus(id);
 
         return {
             id: user._id.toString(),
@@ -28,17 +28,17 @@ export class UsersService {
     }
 
     async getChatUsers(id: string): Promise<User[]> {
-        const user = await this.usersDao.findById(id);
+        const user = await this.usersRepository.findById(id);
 
         if (!user || !user.role || !user.role.name) {
             throw new Error('User not found or invalid role.');
         }
 
-        return await this.usersDao.find(user.id);
+        return await this.usersRepository.find(user.id);
     }
 
     async updateUserStatus(userId: string, online: boolean, lastSeen: Date | null) {
-        const existingStatus = await this.usersDao.findUserStatus(userId);
+        const existingStatus = await this.usersRepository.findUserStatus(userId);
 
         if (existingStatus) {
             existingStatus.online = online;
@@ -46,7 +46,7 @@ export class UsersService {
             existingStatus.lastUpdated = new Date();
             return await existingStatus.save();
         } else {
-            return this.usersDao.createUserStatus(userId, online, lastSeen);
+            return this.usersRepository.createUserStatus(userId, online, lastSeen);
         }
     }
 }

@@ -4,11 +4,11 @@ import { Model } from "mongoose";
 import { Role } from "./entities/role.entity";
 
 @Injectable({})
-export class RoleDao{
+export class RoleRepository {
     constructor(
         @InjectModel("Role")
         private roleModel: Model<Role>
-    ) {}
+    ) { }
 
     async getRoles() {
         return await this.roleModel.find();

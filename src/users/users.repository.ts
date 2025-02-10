@@ -5,7 +5,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { UserStatus } from "./entities/user-status.entity";
 
 @Injectable()
-export class UsersDao {
+export class UsersRepository {
     constructor(
         @InjectModel('User') private userModel: Model<User>,
         @InjectModel('UserStatus') private userStatusModel: Model<UserStatus>

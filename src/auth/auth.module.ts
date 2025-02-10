@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { JwtModule } from '@nestjs/jwt';
 import { jwt_secret } from '../utils/constants';
-import { AuthDao } from './auth.dao';
+import { AuthRepository } from './auth.repository';
 import { AuthResolver } from './auth.resolver';
 import { RoleSchema } from '../roles/entities/role.entity';
 import { UserSchema } from '../users/entities/users.entity';
@@ -24,6 +24,6 @@ import { UserSchema } from '../users/entities/users.entity';
             signOptions: { expiresIn: '60m' },
         }),
     ],
-    providers: [AuthResolver, AuthDao, AuthService]
+    providers: [AuthResolver, AuthRepository, AuthService]
 })
 export class AuthModule {}

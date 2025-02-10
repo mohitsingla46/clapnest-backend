@@ -5,7 +5,7 @@ import { Room } from "./entities/rooms.entity";
 
 @Injectable()
 
-export class RoomsDao {
+export class RoomsRepository {
     constructor(
         @InjectModel('Room') private roomModel: Model<Room>
     ) { }

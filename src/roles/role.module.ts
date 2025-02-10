@@ -1,6 +1,6 @@
 import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
-import { RoleDao } from "./role.dao";
+import { RoleRepository } from "./role.repository";
 import { RoleService } from "./role.service";
 import { RoleSchema } from "./entities/role.entity";
 import { RoleResolver } from "./role.resolver";
@@ -9,7 +9,7 @@ import { RoleResolver } from "./role.resolver";
     imports: [
         MongooseModule.forFeature([{ name: "Role", schema: RoleSchema }])
     ],
-    providers: [RoleResolver, RoleDao, RoleService]
+    providers: [RoleResolver, RoleRepository, RoleService]
 })
 
 export class RolesModule { }

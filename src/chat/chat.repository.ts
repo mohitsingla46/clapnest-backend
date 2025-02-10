@@ -5,7 +5,7 @@ import { Model } from "mongoose";
 import { UserChatStatus } from "./entities/user-chat-status.entity";
 
 @Injectable()
-export class ChatDao {
+export class ChatRepository {
     constructor(
         @InjectModel('Chat') private chatModel: Model<Chat>,
         @InjectModel('UserChatStatus') private userChatStatusModel: Model<UserChatStatus>

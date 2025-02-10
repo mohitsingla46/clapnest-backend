@@ -2,7 +2,7 @@ import { Module } from "@nestjs/common";
 import { MongooseModule } from "@nestjs/mongoose";
 import { UsersResolver } from "./users.resolver";
 import { UsersService } from "./users.service";
-import { UsersDao } from "./users.dao";
+import { UsersRepository } from "./users.repository";
 import { UserSchema } from "./entities/users.entity";
 import { UserStatusSchema } from "./entities/user-status.entity";
 
@@ -17,7 +17,7 @@ import { UserStatusSchema } from "./entities/user-status.entity";
             }
         ])
     ],
-    providers: [UsersResolver, UsersService, UsersDao]
+    providers: [UsersResolver, UsersService, UsersRepository]
 })
 
 export class UsersModule { }

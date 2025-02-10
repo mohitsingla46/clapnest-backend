@@ -1,36 +1,36 @@
 import { Injectable } from "@nestjs/common";
-import { ChatDao } from "./chat.dao";
-import { RoomsDao } from "../rooms/rooms.dao";
-import { UsersDao } from "../users/users.dao";
+import { ChatRepository } from "./chat.repository";
+import { RoomsRepository } from "../rooms/rooms.repository";
+import { UsersRepository } from "../users/users.repository";
 import { formatDistanceToNowStrict, isValid } from "date-fns";
 import { RoomsService } from "../rooms/rooms.service";
 
 @Injectable()
 export class ChatService {
     constructor(
-        private readonly roomsDao: RoomsDao,
-        private readonly chatDao: ChatDao,
-        private readonly usersDao: UsersDao,
+        private readonly roomsRepository: RoomsRepository,
+        private readonly chatRepository: ChatRepository,
+        private readonly usersRepository: UsersRepository,
         private readonly roomsService: RoomsService,
     ) { }
 
     async saveMessage(payload: { senderId: string, roomId: string, message: string }) {
-        return await this.chatDao.create(payload);
+        return await this.chatRepository.create(payload);
     }
 
     async getChats(userId: string) {
-        const rooms = await this.roomsDao.getRoomsByUserId(userId);
+        const rooms = await this.roomsRepository.getRoomsByUserId(userId);
 
         const usersWithLastMessage = [];
 
         for (const room of rooms) {
-            const lastMessage = await this.chatDao.getLastMessage(room.roomId.toString())
+            const lastMessage = await this.chatRepository.getLastMessage(room.roomId.toString())
 
             if (lastMessage) {
                 const otherUserId = room.userId !== userId ? room.userId : room.otherUserId;
 
                 if (otherUserId) {
-                    const user = await this.usersDao.findById(otherUserId.toString());
+                    const user = await this.usersRepository.findById(otherUserId.toString());
                     if (user) {
 
                         const formattedTime = formatDistanceToNowStrict(new Date(lastMessage.createdAt), { addSuffix: true })
@@ -55,7 +55,7 @@ export class ChatService {
     async getChatHistory(userId: string, otherUserId: string): Promise<any> {
         let roomId = await this.roomsService.createRoom({ userId, otherUserId });
 
-        const chatHistory = await this.chatDao.find(roomId);
+        const chatHistory = await this.chatRepository.find(roomId);
 
         if (!chatHistory || chatHistory.length === 0) {
             return [];
@@ -81,7 +81,7 @@ export class ChatService {
                     };
                 }
 
-                const user = await this.usersDao.findById(chat.senderId);
+                const user = await this.usersRepository.findById(chat.senderId);
 
                 return {
                     ...chat.toObject(),
@@ -96,17 +96,17 @@ export class ChatService {
     }
 
     async createOrUpdateUserChatStatus(userId: string, roomId: string, isInroom: boolean) {
-        const existingStatus = await this.chatDao.findUserChatStatus(userId, roomId);
+        const existingStatus = await this.chatRepository.findUserChatStatus(userId, roomId);
         if (!existingStatus) {
-            await this.chatDao.createOrUpdateUserChatStatus({ userId, roomId, isInroom });
+            await this.chatRepository.createOrUpdateUserChatStatus({ userId, roomId, isInroom });
         }
     }
 
     async updateIsInRoom(userId: string, roomId: string, isInroom: boolean) {
-        return await this.chatDao.updateIsInRoom(userId, roomId, isInroom);
+        return await this.chatRepository.updateIsInRoom(userId, roomId, isInroom);
     }
 
     async markMessagesAsRead(userId: string, roomId: string) {
-        return await this.chatDao.readChatMessage(userId, roomId);
+        return await this.chatRepository.readChatMessage(userId, roomId);
     }
 }

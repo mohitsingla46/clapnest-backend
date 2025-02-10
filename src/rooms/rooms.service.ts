@@ -1,18 +1,18 @@
 import { Injectable } from "@nestjs/common";
-import { RoomsDao } from "./rooms.dao";
+import { RoomsRepository } from "./rooms.repository";
 
 @Injectable()
 export class RoomsService {
     constructor(
-        private readonly roomsDao: RoomsDao
+        private readonly roomsRepository: RoomsRepository
     ) { }
 
     async createRoom(payload: { userId: string, otherUserId: string }) {
         const roomId = await this.generateRoomId(payload.userId, payload.otherUserId);
 
-        let roomExist = await this.roomsDao.findRoomByRoomId(roomId);
+        let roomExist = await this.roomsRepository.findRoomByRoomId(roomId);
         if (!roomExist) {
-            await this.roomsDao.create(payload.userId, payload.otherUserId, roomId);
+            await this.roomsRepository.create(payload.userId, payload.otherUserId, roomId);
         }
 
         return roomId;
